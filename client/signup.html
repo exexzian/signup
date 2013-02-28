@@ -1,0 +1,31 @@
+<head>
+  <title>signup</title>
+</head>
+
+<body>
+  {{> header}}
+</body>
+
+<template name="header">
+	<ul>
+		{{#if currentUser}}
+			{{> user_loggedin}}
+		{{else}}
+			{{> user_loggedout}}
+		{{/if}}
+	</ul>
+</template>
+
+<template name="user_loggedin">
+	{{#if loggingIn}}
+		<li><a>Logging in...</a></li>
+	{{else}}
+		<li>the current user {{currentUser.profile.name}} has logged in</li>
+		<li><a id="logout">Logout</a></li>
+	{{/if}}
+</template>
+
+<template name="user_loggedout">
+	<li><a id="login">Login with your account</a></li>
+	<li><a id="signup">Sign Up</a></li>
+</template>
