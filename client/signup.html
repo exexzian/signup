@@ -1,31 +1,73 @@
 <head>
-  <title>signup</title>
+  <title>Signup</title>
 </head>
-
+<!-- Very simple HTML at the moment -->
 <body>
-  {{> header}}
+	<div class="container">
+	
+		{{> header}}
+	
+		</br>
+		<hr>
+		<p>I am on github <a href="https://github.com/schofld">https://github.com/schofld</a>
+		and this experiment is on <a href="https://github.com/schofld/signup">https://github.com/schofld/signup</a> Follow me and contribute... It's just about learning :)</p>
+	</div>	
 </body>
 
 <template name="header">
-	<ul>
-		{{#if currentUser}}
-			{{> user_loggedin}}
-		{{else}}
-			{{> user_loggedout}}
-		{{/if}}
-	</ul>
+	<h2>Simple Login Expeimentation</h2>
+	<hr>
+	{{#if currentUser}}
+		{{> user_loggedin}}
+	{{else}}
+		{{> user_loggedout}}
+	{{/if}}
+</template>
+
+<!-- the Handlebars 'partial' that gets looped to show the user data -->
+<template name="profileData">
+	<p><strong>{{username}}</strong> has logged in</p>
+	<p>My fav color is <strong>{{profile.favcolor}}</strong></p>
+	<p>I am in <strong>{{profile.location}}</strong></p>
+	<p>A little info about me: <strong>{{profile.bio}}</strong></p>
 </template>
 
 <template name="user_loggedin">
 	{{#if loggingIn}}
-		<li><a>Logging in...</a></li>
+		<a>Logging in...</a>
 	{{else}}
-		<li>the current user {{currentUser.username}} has logged in</li>
-		<li><a id="logout">Logout</a></li>
+		<!-- the user data used to be shown this way
+		<p>My fav color is <strong>{{currentUser.profile.favcolor}}</strong></p>
+		<p>I am in <strong>{{currentUser.profile.location}}</strong></p>
+		-->
+		{{#each curuser}}
+			{{> profileData}}
+		{{/each}}
+		</br>
+		<div class="controls">
+			<input id="bio" type="text" placeholder="Bio">
+		</div>
+		<button id="update" class="btn" type="submit">Update</button>
+		<hr>
+		<button id="logout" class="btn" type="submit">Log Out</button>
 	{{/if}}
 </template>
 
 <template name="user_loggedout">
-	<li><a id="login">Login with your account</a></li>
-	<li><a id="signup">Sign Up</a></li>
+	<p>Login with your account</p>
+	<input id="username" type="text" placeholder="username">
+	<input id="password" type="password" placeholder="password">
+	</br>
+	<button id="login" class="btn" type="submit">Login</button>
+	</br>
+	<hr>
+	<p><a id="signup">Or Sign Up</a></p>
+		{{#if signup}}
+			<input id="usernameup" type="text" placeholder="Choose a username">
+			<input id="passwordup" type="text" placeholder="Choose a password">
+			<input id="favcolor" type="text" placeholder="What is you Fav color?">
+			<input id="location" type="text" placeholder="Where are you?">
+			</br>
+			<button id="createUser" class="btn" type="submit">Create User</button>
+		{{/if}}
 </template>
