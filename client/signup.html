@@ -1,21 +1,27 @@
 <head>
-  <title>Signup</title>
+  <title>Simple Signup Experimentation</title>
 </head>
 <!-- Very simple HTML at the moment -->
 <body>
-	<div class="container">
-	
-		{{> header}}
-	
-		</br>
-		<hr>
-		<p>I am on github <a href="https://github.com/schofld">https://github.com/schofld</a>
-		and this experiment is on <a href="https://github.com/schofld/signup">https://github.com/schofld/signup</a> Follow me and contribute... It's just about learning :)</p>
-	</div>	
+	<div id="wrap">
+		<div class="container">
+			<div class="row">
+				<div class="span4 offset4">
+					{{> header}}
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	<div id="footer">
+		<div class="container">
+			<p class="muted credit">I am on github <a href="https://github.com/schofld">https://github.com/schofld</a> and this experiment is on <a href="https://github.com/schofld/signup">https://github.com/schofld/signup</a> Follow me and contribute... It's just about learning :)</p>
+		</div>
+	</div>
 </body>
 
 <template name="header">
-	<h2>Simple Login Expeimentation</h2>
+	<h2 class="text-center">Sign In</h2>
 	<hr>
 	{{#if currentUser}}
 		{{> user_loggedin}}
@@ -55,13 +61,13 @@
 
 <template name="user_loggedout">
 	<p>Login with your account</p>
-	<input id="username" type="text" placeholder="username">
-	<input id="password" type="password" placeholder="password">
+	<input class="span4" id="username" type="text" placeholder="username">
+	<input class="span4" id="password" type="password" placeholder="password">
 	</br>
-	<button id="login" class="btn" type="submit">Login</button>
+	<button id="login" class="btn btn-success" type="submit">Sign In</button>
 	</br>
 	<hr>
-	<p><a id="signup">Or Sign Up</a></p>
+	<p>New user? <a id="signup">Sign up now!</a></p>
 		{{#if signup}}
 			<input id="usernameup" type="text" placeholder="Choose a username">
 			<input id="passwordup" type="text" placeholder="Choose a password">
