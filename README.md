@@ -1,8 +1,6 @@
 Signup
 ======
 
-CHANGES
-
 Simple user signup experiment. [http://davessignup.meteor.com/](http://davessignup.meteor.com/) 
 
 Note! The Meteor 'autopublish' package is installed/enabled. So their is currently full read/write access to the servers database
