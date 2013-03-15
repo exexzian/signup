@@ -55,24 +55,53 @@ Template.user_loggedin.curuser = function () {
 // return to handlebars #if helper true or false to reveal or hide the signup form
 Template.user_loggedout.signup = function () {
 	if (Session.get("signup")) {
-		console.log("session signup is 'true'");
 		return true
 	}
 	else {
-		console.log("session signup is 'false'");
 		return false
 	}
 }
+Template.header.signup = function () {
+	if (Session.get("signup")) {
+		return true
+	}
+	else {
+		return false
+	}
+}
+Template.user_loggedin.editMode = function () {
+	if (Session.get("editMode")) {
+		return true
+	} else {
+		return false
+	}
+}
+Template.profileData.editMode = function () {
+	if (Session.get("editMode")) {
+		return true
+	} else {
+		return false
+	}
+}
+
+
 // if the user is logged in
 Template.user_loggedin.events({
 	"click #logout": function (e, tmpl) {
 		Meteor.logout()
 	},
-	"click #update": function (event) {
-		var mybio = $("#bio").val();
-		console.log("This is the val from the bio input: " + mybio);
-		//a snipet for use in 
-		//Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.bio": "diferent"}})
-		  Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.bio": mybio}})
+	"click #editProfile": function (event) {
+		console.log("Edit Profile PRESSED");
+		Session.set("editMode", true);
+		console.log(Session.get("editMode"));
+	},
+	"click #saveEdit": function (event) {
+		console.log("Save Edit PRESSED");
+		var favcolor = $("#favcolor").val();
+		var location = $("#location").val();
+		var bio = $("#bio").val();
+	
+		Meteor.users.update({_id: Meteor.userId()}, {$set: {"profile.favcolor": favcolor, "profile.location": location, "profile.bio": bio}});
+		Session.set("editMode", false);
 	}
 });
