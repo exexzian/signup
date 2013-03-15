@@ -1,5 +1,19 @@
+@media (max-width: 480px) {
+	#spacer {
+		height: 0.5em !important;
+	}
+	#footer {
+	visibility: hidden;
+	}
+	#wrap {
+		padding-bottom: 3em;
+	}
+}
 html, body {
 	height: 100%;
+}
+a {
+	cursor: pointer;
 }
 #wrap {
 	min-height: 100%;
