@@ -34,6 +34,9 @@ a {
 	margin: 0;
 	line-height: 3em !important;
 }
+#bio {
+	white-space: pre-wrap;
+}
 .btn-custom {
 	background-color: hsl(201, 60%, 33%) !important;
 	background-repeat: repeat-x;

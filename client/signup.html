@@ -25,7 +25,7 @@
 
 <template name="header">
 	{{#if currentUser}}
-		<h1 class="text-center">Your Profile</h1>
+	<h1 class="text-center">{{currentUser.username}}'s Profile</h1>
 	{{else}}
 		{{#if signup}}
 			<h1 class="text-center">Sign Up</h1>
@@ -43,17 +43,23 @@
 
 <!-- the Handlebars 'partial' that gets looped to show the user data -->
 <template name="profileData">
-	<h2>{{username}}</h2>
 	{{#if editMode}}
-		<div class="controls">
+		<fieldset>
+			<label><i class="icon-star"></i> Favourite Color</label>
 			<input class="span4" id="favcolor" type="text" value="{{profile.favcolor}}">
+			<label><i class="icon-map-marker"></i> Location</label>
 			<input class="span4" id="location" type="text" value="{{profile.location}}">
-			<input class="span4" id="bio" type="text" value="{{profile.bio}}">
+			<label><i class="icon-info-sign"></i> Your Bio</label>
+			<textarea class="span4" id="bio">{{profile.bio}}</textarea>
+			<!--<input class="span4" id="bio" type="text" value="{{profile.bio}}">-->
+			<button id="saveEdit" class="btn btn-success" type="submit">Save</button>
+		</fieldset>
 		</div>
 	{{else}}
 		<p><i class="icon-star"></i> My fav color is {{profile.favcolor}}</dd>
 		<p><i class="icon-map-marker"></i> {{profile.location}}</p>
-		<p><i class="icon-info-sign"></i> {{profile.bio}}</p>
+		<p id="bio"><i class="icon-info-sign"></i> {{profile.bio}}</p>
+		<button id="editProfile" class="btn btn-custom" type="submit"><i class="icon-pencil icon-white"></i> Edit Your Profile</button>
 	{{/if}}
 </template>
 
@@ -67,14 +73,7 @@
 		-->
 		{{#each curuser}}
 			{{> profileData}}
-		{{/each}}
-
-		{{#if editMode}}
-			<button id="saveEdit" class="btn btn-success" type="submit">Save</button>
-		{{else}}
-			<button id="editProfile" class="btn btn-custom" type="submit"><i class="icon-pencil icon-white"></i> Edit Your Profile</button>
-		{{/if}}
-		
+		{{/each}}		
 		<hr>
 		<button id="logout" class="btn" type="submit">Log Out</button>
 	{{/if}}

@@ -15,6 +15,8 @@ Meteor.autorun(function () {
 	}
 });
 
+Meteor.loggingIn();
+
 // if the user is logged out
 // All the events that are bound to 'user_loggedout'
 Template.user_loggedout.events({
