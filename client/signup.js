@@ -1,8 +1,27 @@
 // functions that can be reused 
+var LoginErr;
 function login () {
 	var username = $("#username").val();
 	var password = $("#password").val();
-	Meteor.loginWithPassword(username, password);
+	Meteor.loginWithPassword(username, password, function (error){
+		if (error) {
+			if (LoginErr == 1) {
+				//console.log("LoginErr is greater then or equal to 1");
+				$("#mainDiv p:first span").addClass("label-warning");
+				//console.log("Before: " + LoginErr);
+				LoginErr = LoginErr + 1;
+				//console.log("After: " + LoginErr);
+			} else if (LoginErr >= 2) {
+				$("#mainDiv p:first span").removeClass("label-warning").addClass("label-important");
+				LoginErr = LoginErr + 1;
+			}
+			else {
+				$("#mainDiv p:first").append("<span class='label'>Try again</span>");
+				LoginErr = 1;
+			}
+			$("#login i").remove();
+		}
+	});
 }
 
 //run function when the dependencies change. 
@@ -16,12 +35,26 @@ Meteor.autorun(function () {
 });
 
 Meteor.loggingIn();
+// check if the user has logged in previously and the server is waiting for a reply
+if (Meteor.userId() && Meteor.status().status == "connecting"){
+	var once = true;
+	Template.main.rendered = function() {
+		if (once) {
+			once = false;
+			console.log("logged in Waiting for reply");
+			$(function() {
+				$("#mainDiv").prepend("<div id='alertLoggingIn' class='alert'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>Logging In!</strong> Waiting for the response from the server</div>");
+			});
+		};
+	};
+} 
 
 // if the user is logged out
 // All the events that are bound to 'user_loggedout'
 Template.user_loggedout.events({
 	"click #login": function (e, tmpl) {
 		console.log("clicked login");
+		$("#login").prepend("<i class='icon-refresh icon-spin'></i>");
 		// login() function just to reuse the snippet of code 
 		login();
 	},
@@ -53,6 +86,13 @@ Template.user_loggedout.events({
 Template.user_loggedin.curuser = function () {
 	return Meteor.users.find({_id: Meteor.userId()});
 }
+// hide the login alert HERE because this is where the user_loggedin template is called if logged in
+Template.user_loggedin.created = function () {
+	console.log("hide LoggingIn alert");
+	$(function() {
+		$("#alertLoggingIn").fadeOut("fast");
+	});
+};
 
 // return to handlebars #if helper true or false to reveal or hide the signup form
 Template.user_loggedout.signup = function () {

@@ -2,15 +2,22 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Simple Signup Experimentation</title>
+	<link rel="stylesheet" href="../css/font-awesome.min.css">
 </head>
 <!-- Very simple HTML at the moment -->
 <body>
+	{{> main}}
+</body>
+
+<template name="main">
 	<div id="wrap">
 		<div class="container">
 			<div id="spacer"></div>
 			<div class="row">
-				<div class="span4 offset4">
+				<div id="mainDiv" class="span4 offset4">
+				{{#isolate}}
 					{{> header}}
+				{{/isolate}}
 				</div>
 			</div>
 		</div>
@@ -21,11 +28,11 @@
 			<p class="muted credit">I am on github <a href="https://github.com/schofld">https://github.com/schofld</a> and this experiment is on <a href="https://github.com/schofld/signup">https://github.com/schofld/signup</a> Follow me and contribute... It's just about learning :)</p>
 		</div>
 	</div>
-</body>
+</template>
 
 <template name="header">
 	{{#if currentUser}}
-	<h1 class="text-center">{{currentUser.username}}'s Profile</h1>
+	<h1 id="username" class="text-center">{{currentUser.username}}'s Profile</h1>
 	{{else}}
 		{{#if signup}}
 			<h1 class="text-center">Sign Up</h1>
@@ -89,7 +96,7 @@
 			</br>
 			<button id="createUser" class="btn btn-success" type="submit">Create User</button>
 		{{else}}
-			<p>Login with your account</p>
+			<p>Login with your account {{#if loginError}}<span class="label">Try again</span>{{/if}}</p>
 			<input class="span4" id="username" type="text" placeholder="username">
 			<input class="span4" id="password" type="password" placeholder="password">
 			</br>
