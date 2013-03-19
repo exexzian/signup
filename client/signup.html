@@ -6,6 +6,14 @@
 </head>
 <!-- Very simple HTML at the moment -->
 <body>
+	<div id="loginAlert" class="modal hide">
+		<div class="modal-header">
+			<h3>Logging In!</h3>
+		</div>
+		<div class="modal-body">
+			<p>Waiting for reply from the server...</p>
+		</div>
+	</div>
 	{{> main}}
 </body>
 
@@ -72,7 +80,8 @@
 
 <template name="user_loggedin">
 	{{#if loggingIn}}
-		<a>Logging in...</a>
+		<p><strong>Logging In!</strong></p>
+		<p>Waiting for the response from the server</p>
 	{{else}}
 		<!-- the user data used to be shown this way
 		<p>My fav color is <strong>{{currentUser.profile.favcolor}}</strong></p>
@@ -96,7 +105,7 @@
 			</br>
 			<button id="createUser" class="btn btn-success" type="submit">Create User</button>
 		{{else}}
-			<p>Login with your account {{#if loginError}}<span class="label">Try again</span>{{/if}}</p>
+			<p>Login with your account </p>
 			<input class="span4" id="username" type="text" placeholder="username">
 			<input class="span4" id="password" type="password" placeholder="password">
 			</br>

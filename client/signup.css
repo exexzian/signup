@@ -15,6 +15,10 @@ html, body {
 a {
 	cursor: pointer;
 }
+.modal-backdrop, .modal-backdrop.fade.in {
+opacity: 0.1 !important;
+filter: alpha(opacity=10) !important;
+}
 #wrap {
 	min-height: 100%;
 	height: auto !important;

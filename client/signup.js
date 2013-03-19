@@ -43,7 +43,8 @@ if (Meteor.userId() && Meteor.status().status == "connecting"){
 			once = false;
 			console.log("logged in Waiting for reply");
 			$(function() {
-				$("#mainDiv").prepend("<div id='alertLoggingIn' class='alert'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>Logging In!</strong> Waiting for the response from the server</div>");
+				//$("#mainDiv").prepend("<div id='alertLoggingIn' class='alert'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>Logging In!</strong> Waiting for the response from the server</div>");
+				$("#loginAlert").modal("show");
 			});
 		};
 	};
@@ -90,7 +91,8 @@ Template.user_loggedin.curuser = function () {
 Template.user_loggedin.created = function () {
 	console.log("hide LoggingIn alert");
 	$(function() {
-		$("#alertLoggingIn").fadeOut("fast");
+		//$("#alertLoggingIn").fadeOut("fast");
+		$("#loginAlert").modal("hide");
 	});
 };
 
