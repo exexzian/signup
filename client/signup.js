@@ -50,6 +50,11 @@ if (Meteor.userId() && Meteor.status().status == "connecting"){
 	};
 } 
 
+// initiate validate when Template is rendered 
+Template.user_loggedout.rendered = function () {
+	$("input").not("[type=submit]").jqBootstrapValidation();
+}
+
 // if the user is logged out
 // All the events that are bound to 'user_loggedout'
 Template.user_loggedout.events({

@@ -97,13 +97,30 @@
 
 <template name="user_loggedout">
 		{{#if signup}}
-			<input class="span4" id="usernameup" type="text" placeholder="Choose a username">
-			<input class="span4" id="passwordup" type="text" placeholder="Choose a password">
-			<p>Share someting about yourself</p>
+			<div class="control-group">
+				<div class="controls">	
+					<input class="span4" id="usernameup" type="text" pattern="\w{3,9}" data-validation-pattern-message="Must be alphanumerical at least 3 characters and no longer then 9" placeholder="Choose a username">
+					<p class="help-block">At least 3 characters and less then 9</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input class="span4" id="emailup" type="email" placeholder="Your email" required>
+					<p class="help-block">You will sent an email to confirm your address</p>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input class="span4" id="passwordup" type="password" pattern="\w{4,9}" data-validation-pattern-message="Must be alphanumerical at least 4 characters and no longer then 9" placeholder="Create a password">
+					<p class="help-block">Choose your password</p>
+				</div>
+			</div>
+			<hr>
+			<p><strong>Share someting about yourself</strong></p>
 			<input class="span4" id="favcolor" type="text" placeholder="What is you Fav color?">
 			<input class="span4" id="location" type="text" placeholder="Where are you?">
 			</br>
-			<button id="createUser" class="btn btn-success" type="submit">Create User</button>
+			<button id="createUser" class="btn btn-success" type="submit">Create Your Account</button>
 		{{else}}
 			<p>Login with your account </p>
 			<input class="span4" id="username" type="text" placeholder="username">
