@@ -1,5 +1,5 @@
 // functions that can be reused 
-var LoginErr;
+var LoginErr, inputValid;
 function login () {
 	var username = $("#username").val();
 	var password = $("#password").val();
@@ -53,6 +53,30 @@ if (Meteor.userId() && Meteor.status().status == "connecting"){
 // initiate validate when Template is rendered 
 Template.user_loggedout.rendered = function () {
 	$("input").not("[type=submit]").jqBootstrapValidation();
+	$("form").submit(function (event) {
+		event.preventDefault();
+	});
+	$("form").jqBootstrapValidation ({
+		submitSuccess: function($form, event) {
+			event.preventDefault();
+			inputValid = true;
+			console.log("set inputValid to true");
+/*
+			console.log("clicked Create User BTN when VALID");
+			// get the values form the input elements 
+			var username = $("#usernameup").val();
+			var password = $("#passwordup").val();
+			var favcolor = $("#favcolor").val();
+			var location = $("#location").val();
+			var email = $("#emailup").val();
+
+			console.log(username + " : " + password + " : " + email + " : " + favcolor + " : " + location);
+
+			Accounts.createUser({username: username, password: password, email: email, profile: {favcolor: favcolor, location: location}});
+*/
+		}
+	});
+
 }
 
 // if the user is logged out
@@ -76,17 +100,21 @@ Template.user_loggedout.events({
 		console.log(Session.get("signup"));
 	},
 	"click #createUser": function (e, tmpl) {
-		console.log("clicked Create User BTN");
-		// get the values form the input elements 
-		var username = $("#usernameup").val();
-		var password = $("#passwordup").val();
-		var favcolor = $("#favcolor").val();
-		var location = $("#location").val();
+		if (inputValid) {
+			console.log("clicked Create User BTN");
+			// get the values form the input elements 
+			var username = $("#usernameup").val();
+			var password = $("#passwordup").val();
+			var favcolor = $("#favcolor").val();
+			var location = $("#location").val();
+			var email = $("#emailup").val();
 
-		console.log(username + " : " + password + " : " + favcolor + " : " + location);
+			console.log(username + " : " + password + " : " + email + " : " + favcolor + " : " + location);
 
-		Accounts.createUser({username: username, password: password, profile: {favcolor: favcolor, location: location}});
+			Accounts.createUser({username: username, password: password, email: email, profile: {favcolor: favcolor, location: location}});
+		}
 	}
+
 });
 
 Template.user_loggedin.curuser = function () {
