@@ -29,8 +29,9 @@
 				</div>
 			</div>
 		</div>
+		<div id="spacer"></div>
 	</div>
-		
+	
 	<div id="footer">
 		<div class="container">
 			<p class="muted credit">I am on github <a href="https://github.com/schofld">https://github.com/schofld</a> and this experiment is on <a href="https://github.com/schofld/signup">https://github.com/schofld/signup</a> Follow me and contribute... It's just about learning :)</p>
@@ -96,62 +97,53 @@
 </template>
 
 <template name="user_loggedout">
-{{#if signup}}
-			<form>
-				<div class="control-group">
-					<div class="controls">	
-						<input class="span4" id="usernameup" type="text" pattern="\w{3,9}" data-validation-pattern-message="Must be alphanumerical at least 3 characters and no longer then 9" placeholder="Choose a username" required>
-						<p class="help-block">At least 3 characters and less then 9</p>
-					</div>
+	{{#if signup}}
+		<form id="signupForm">
+			<div class="control-group">
+				<div class="controls">	
+					<input class="span4" id="username" name="username" type="text" placeholder="Choose a username">
+					<div class="alert alert-info">Must be alphanumerical at least 3 characters and no longer then 9</div>
 				</div>
-				<div class="control-group">
-					<div class="controls">
-						<input class="span4" id="emailup" type="email" placeholder="Your email" required>
-						<p class="help-block">You will sent an email to confirm your address</p>
-					</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input class="span4" id="email" name="email" type="email" placeholder="Your email">
+					<div class="alert alert-info">An email confirmation will be sent</div>
 				</div>
-				<div class="row">
-					<div class="span2">
-						<div class="control-group">
-							<div class="controls">
-								<input class="span2" id="passwordup" type="password" name="passwordVali" pattern="\w{4,9}" data-validation-pattern-message="Must be alphanumerical at least 4 characters and no longer then 9" placeholder="Choose a password" required>
-								<p class="help-block">Choose Password</p>
-							</div>
-						</div>
-					</div>
-					<div class="span2">
-						<div class="control-group">
-							<div class="controls">
-								<input class="span2" id="passwordup" type="password" name="passwordCheck" data-validation-matches-match="passwordVali" data-validation-matches-message="The passwords must be the same"  pattern="\w{4,9}" data-validation-pattern-message="Must be alphanumerical at least 4 characters and no longer then 9" placeholder="Repeat your password" required>
-								<p class="help-block">Repeat Password</p>
-							</div>
-						</div>
-					</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input id="password" name="password" class="span2" type="text" placeholder="Password">
+					<input id="password_again" name="password_again" class="span2" type="text" placeholder="Retype your password">
+					<div class="alert alert-info">Make sure you type your password correctly</div>
 				</div>
-			
-				<hr>
-				<p class="text-center"><strong>Share someting about yourself</strong></p>
-				<div class="control-group">
-					<div class="controls">
-						<input class="span4" id="favcolor" type="text" pattern="[\w\.,;:&-\*\s\t\r\n/\+\|\?\'\#\)\(]{1,20}" data-validation-pattern-message="Must be less than 20 characters" placeholder="What is you Fav color?" required>
-						<p class="help-block"></p>
-					</div>
+			</div>
+			<h4 class="text-center"><strong>Share someting about yourself</strong></h4>
+			<div class="control-group">
+				<div class="controls">
+					<!--
+					<input class="span4" id="favcolor" type="text" pattern="[\w\.,;:&-\*\s\t\r\n/\+\|\?\'\#\)\(]{1,20}" data-validation-pattern-message="Must be less than 20 characters" placeholder="What is you Fav color?" required>
+					-->
+					<input name="favcolor" class="span4" id="favcolor" type="text" placeholder="What is your favourite color?">
 				</div>
-				<div class="control-group">
-					<div class="controls">
-						<input class="span4" id="location" type="text" pattern="[\w\.,;:&-\*\s\t\r\n/\+\|\?\'\#\)\(]{1,100}" data-validation-pattern-message="Must be less than 100 characters" placeholder="Where are you?" required>
-						<p class="help-block"></p>
-					</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<!--
+					<input class="span4" id="location" type="text" pattern="[\w\.,;:&-\*\s\t\r\n/\+\|\?\'\#\)\(]{1,100}" data-validation-pattern-message="Must be less than 100 characters" placeholder="Where are you?" required>
+					-->
+					<input name="location" class="span4" id="location" type="text" placeholder="Where are you?">
 				</div>
-				<button id="createUser" class="btn btn-success">Create Your Account</button>
-			</form>
-		{{else}}
-			<p>Login with your account </p>
-			<input class="span4" id="username" type="text" placeholder="username">
-			<input class="span4" id="password" type="password" placeholder="password">
-			</br>
-			<button id="login" class="btn btn-success" type="submit">Sign In</button>
-			<hr>
-			<p>New user? <a id="signup">Sign up now!</a></p>
-		{{/if}}
+			</div>
+				<input class="btn btn-success" type="submit" id="createUser" value="Create Your Account">
+		</form>
+	{{else}}
+		<p>Login with your account </p>
+		<input class="span4" id="username" type="text" placeholder="username">
+		<input class="span4" id="password" type="password" placeholder="password">
+		</br>
+		<button id="login" class="btn btn-success" type="submit">Sign In</button>
+		<hr>
+		<p>New user? <a id="signup">Sign up now!</a></p>
+	{{/if}}
 </template>

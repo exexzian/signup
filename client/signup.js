@@ -50,35 +50,6 @@ if (Meteor.userId() && Meteor.status().status == "connecting"){
 	};
 } 
 
-// initiate validate when Template is rendered 
-Template.user_loggedout.rendered = function () {
-	$("input").not("[type=submit]").jqBootstrapValidation();
-	$("form").submit(function (event) {
-		event.preventDefault();
-	});
-	$("form").jqBootstrapValidation ({
-		submitSuccess: function($form, event) {
-			event.preventDefault();
-			inputValid = true;
-			console.log("set inputValid to true");
-/*
-			console.log("clicked Create User BTN when VALID");
-			// get the values form the input elements 
-			var username = $("#usernameup").val();
-			var password = $("#passwordup").val();
-			var favcolor = $("#favcolor").val();
-			var location = $("#location").val();
-			var email = $("#emailup").val();
-
-			console.log(username + " : " + password + " : " + email + " : " + favcolor + " : " + location);
-
-			Accounts.createUser({username: username, password: password, email: email, profile: {favcolor: favcolor, location: location}});
-*/
-		}
-	});
-
-}
-
 // if the user is logged out
 // All the events that are bound to 'user_loggedout'
 Template.user_loggedout.events({
@@ -98,24 +69,32 @@ Template.user_loggedout.events({
 		console.log("clicked signup");
 		Session.set("signup", true);
 		console.log(Session.get("signup"));
-	},
-	"click #createUser": function (e, tmpl) {
-		if (inputValid) {
-			console.log("clicked Create User BTN");
-			// get the values form the input elements 
-			var username = $("#usernameup").val();
-			var password = $("#passwordup").val();
-			var favcolor = $("#favcolor").val();
-			var location = $("#location").val();
-			var email = $("#emailup").val();
-
-			console.log(username + " : " + password + " : " + email + " : " + favcolor + " : " + location);
-
-			Accounts.createUser({username: username, password: password, email: email, profile: {favcolor: favcolor, location: location}});
-		}
 	}
+	/*
+	,
+	"click #createUser": function (e, tmpl) {
+		console.log("#createUser button was fired");
+	}
+	*/
 
 });
+
+// function for creating user account... Run if the form is valid
+function createUserAccount () {
+	console.log("INIT create user account ");
+	
+	// get the values form the input elements 
+	var username = $("#username").val();
+	var password = $("#password").val();
+	var favcolor = $("#favcolor").val();
+	var location = $("#location").val();
+	var email = $("#email").val();
+
+	console.log(username + " : " + password + " : " + email + " : " + favcolor + " : " + location);
+
+	Accounts.createUser({username: username, password: password, email: email, profile: {favcolor: favcolor, location: location}});
+	
+};
 
 Template.user_loggedin.curuser = function () {
 	return Meteor.users.find({_id: Meteor.userId()});
@@ -182,3 +161,11 @@ Template.user_loggedin.events({
 		Session.set("editMode", false);
 	}
 });
+
+// initiate validate when Template is rendered 
+Template.user_loggedout.rendered = function () {
+	if (Session.get("signup")) {
+		myValidation();
+	}
+}
+
