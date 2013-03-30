@@ -55,7 +55,9 @@ function myValidation () {
 				},
 				password_again: {
 					required: true,
-					equalTo: "#password"
+					equalTo: "#password",
+					minlength: 3,
+					maxlength: 12
 				}, 
 				favcolor: {
 					required: true,
@@ -83,7 +85,9 @@ function myValidation () {
 				},
 				password_again: {
 					required: "Retype your password",
-					equalTo: "The passwords have to match"
+					equalTo: "The passwords have to match",
+					minlength: "At least 3 chars!",
+					maxlength: "No longer then 12 chars!"
 				},
 				favcolor: {
 					required: "What is your favourite color?",
