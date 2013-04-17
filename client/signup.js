@@ -1,25 +1,26 @@
-// functions that can be reused 
-var LoginErr, inputValid;
+var LoginErr, createUserError;
+// functions that can be reused
 function login () {
-	var username = $("#username").val();
-	var password = $("#password").val();
+	var username = $("#usernameLogin").val();
+	var password = $("#passwordLogin").val();
 	Meteor.loginWithPassword(username, password, function (error){
 		if (error) {
 			if (LoginErr == 1) {
 				//console.log("LoginErr is greater then or equal to 1");
-				$("#mainDiv p:first span").addClass("label-warning");
-				//console.log("Before: " + LoginErr);
+				//$("#mainDiv p:first span").addClass("label-warning");
+				$("#mainDiv div.alert").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
 				LoginErr = LoginErr + 1;
-				//console.log("After: " + LoginErr);
 			} else if (LoginErr >= 2) {
-				$("#mainDiv p:first span").removeClass("label-warning").addClass("label-important");
+				//$("#mainDiv p:first span").removeClass("label-warning").addClass("label-important");
+				$("#mainDiv div.alert").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
 				LoginErr = LoginErr + 1;
 			}
 			else {
-				$("#mainDiv p:first").append("<span class='label'>Try again</span>");
+				$("#mainDiv p:first").remove();
+				$("form#loginForm").before("<div class='alert alert-error'>Wrong username or password!</div>");
 				LoginErr = 1;
 			}
-			$("#login i").remove();
+			$("#login").button('reset');
 		}
 	});
 }
@@ -43,7 +44,6 @@ if (Meteor.userId() && Meteor.status().status == "connecting"){
 			once = false;
 			console.log("logged in Waiting for reply");
 			$(function() {
-				//$("#mainDiv").prepend("<div id='alertLoggingIn' class='alert'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>Logging In!</strong> Waiting for the response from the server</div>");
 				$("#loginAlert").modal("show");
 			});
 		};
@@ -53,12 +53,6 @@ if (Meteor.userId() && Meteor.status().status == "connecting"){
 // if the user is logged out
 // All the events that are bound to 'user_loggedout'
 Template.user_loggedout.events({
-	"click #login": function (e, tmpl) {
-		console.log("clicked login");
-		$("#login").prepend("<i class='icon-refresh icon-spin'></i>");
-		// login() function just to reuse the snippet of code 
-		login();
-	},
 	"keyup #password": function (event) {
 		if (event.type == "keyup" && event.which == 13) {
 			console.log("keyup identified enter was pressed");
@@ -70,29 +64,50 @@ Template.user_loggedout.events({
 		Session.set("signup", true);
 		console.log(Session.get("signup"));
 	}
-	/*
-	,
-	"click #createUser": function (e, tmpl) {
-		console.log("#createUser button was fired");
-	}
-	*/
+});
+// Verify email address
+/*
+Meteor.startup(function () {
+if (Accounts._verifyEmailToken) {
+	console.log("_verifyEmailToken exists");
+	Accounts.verifyEmail(Accounts._verifyEmailToken, function(error) {
+	Accounts._enableAutoLogin();
+	if (!error)
+		//loginButtonsSession.set('justVerifiedEmail', true);
+		console.log("their was no error verifying the email");
+	// XXX show something if there was an error.
+	});
+}
 
 });
+*/
 
 // function for creating user account... Run if the form is valid
 function createUserAccount () {
 	console.log("INIT create user account ");
 	
 	// get the values form the input elements 
-	var username = $("#username").val();
-	var password = $("#password").val();
+	var username = $("#usernameSignup").val();
+	var password = $("#passwordSignup").val();
 	var favcolor = $("#favcolor").val();
 	var location = $("#location").val();
 	var email = $("#email").val();
 
 	console.log(username + " : " + password + " : " + email + " : " + favcolor + " : " + location);
 
-	Accounts.createUser({username: username, password: password, email: email, profile: {favcolor: favcolor, location: location}});
+	Accounts.createUser({username: username, password: password, email: email, profile: {favcolor: favcolor, location: location}}, function(error) {
+		if (error) {
+			console.log(error);
+			//$("#signupForm div .alert").remove();
+			$("#createUser").button('reset');
+			if (createUserError >= 1) {
+				$("#mainDiv div.alert:first").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+			} else {
+				$("form#signupForm").before("<div class='alert alert-error'>" + error.reason + "</div>");
+				createUserError = 1;
+			}
+		}
+	});
 	
 };
 
@@ -103,7 +118,6 @@ Template.user_loggedin.curuser = function () {
 Template.user_loggedin.created = function () {
 	console.log("hide LoggingIn alert");
 	$(function() {
-		//$("#alertLoggingIn").fadeOut("fast");
 		$("#loginAlert").modal("hide");
 	});
 };
@@ -165,7 +179,11 @@ Template.user_loggedin.events({
 // initiate validate when Template is rendered 
 Template.user_loggedout.rendered = function () {
 	if (Session.get("signup")) {
-		myValidation();
+		console.log("validate: " + signupForm);
+		myValidation (signupRules, signupMessages, signupForm, signupPlacement, signupHandleSubmit);
+	} else {
+		console.log("validate: " + loginForm);
+		myValidation (loginRules, loginMessages, loginForm, loginPlacement, loginHandleSubmit);
 	}
 }
 

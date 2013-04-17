@@ -9,3 +9,5 @@ preserve-inputs
 coffeescript
 bootstrap
 accounts-password
+email
+accounts-ui
