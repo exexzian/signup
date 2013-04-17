@@ -1,30 +1,49 @@
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Simple Signup Experimentation</title>
+	<link rel="stylesheet" href="../css/font-awesome.min.css">
 </head>
 <!-- Very simple HTML at the moment -->
 <body>
+	<!-- This Bootstrap modal is hidden by default -->
+	<div id="loginAlert" class="modal hide">
+		<div class="modal-header">
+			<h3>Logging In!</h3>
+		</div>
+		<div class="modal-body">
+			<p>Waiting for reply from the server...</p>
+		</div>
+	</div>
+	<!-- END Bootstrap modal -->
+	{{> main}}
+</body>
+
+<template name="main">
 	<div id="wrap">
 		<div class="container">
 			<div id="spacer"></div>
 			<div class="row">
-				<div class="span4 offset4">
+				<div id="mainDiv" class="span4 offset4">
+				{{#isolate}}
 					{{> header}}
+				{{/isolate}}
 				</div>
 			</div>
 		</div>
+		<div id="spacer"></div>
 	</div>
-		
+	
 	<div id="footer">
 		<div class="container">
 			<p class="muted credit">I am on github <a href="https://github.com/schofld">https://github.com/schofld</a> and this experiment is on <a href="https://github.com/schofld/signup">https://github.com/schofld/signup</a> Follow me and contribute... It's just about learning :)</p>
 		</div>
 	</div>
-</body>
+</template>
 
 <template name="header">
 	{{#if currentUser}}
-		<h1 class="text-center">Your Profile</h1>
+	<h1 id="username" class="text-center">{{currentUser.username}}'s Profile</h1>
 	{{else}}
 		{{#if signup}}
 			<h1 class="text-center">Sign Up</h1>
@@ -42,23 +61,30 @@
 
 <!-- the Handlebars 'partial' that gets looped to show the user data -->
 <template name="profileData">
-	<h2>{{username}}</h2>
 	{{#if editMode}}
-		<div class="controls">
+		<fieldset>
+			<label><i class="icon-star"></i> Favourite Color</label>
 			<input class="span4" id="favcolor" type="text" value="{{profile.favcolor}}">
+			<label><i class="icon-map-marker"></i> Location</label>
 			<input class="span4" id="location" type="text" value="{{profile.location}}">
-			<input class="span4" id="bio" type="text" value="{{profile.bio}}">
+			<label><i class="icon-info-sign"></i> Your Bio</label>
+			<textarea class="span4" id="bio">{{profile.bio}}</textarea>
+			<!--<input class="span4" id="bio" type="text" value="{{profile.bio}}">-->
+			<button id="saveEdit" class="btn btn-success" type="submit">Save</button>
+		</fieldset>
 		</div>
 	{{else}}
 		<p><i class="icon-star"></i> My fav color is {{profile.favcolor}}</dd>
 		<p><i class="icon-map-marker"></i> {{profile.location}}</p>
-		<p><i class="icon-info-sign"></i> {{profile.bio}}</p>
+		<p id="bio"><i class="icon-info-sign"></i> {{profile.bio}}</p>
+		<button id="editProfile" class="btn btn-custom" type="submit"><i class="icon-pencil icon-white"></i> Edit Your Profile</button>
 	{{/if}}
 </template>
 
 <template name="user_loggedin">
 	{{#if loggingIn}}
-		<a>Logging in...</a>
+		<p><strong>Logging In!</strong></p>
+		<p>Waiting for the response from the server</p>
 	{{else}}
 		<!-- the user data used to be shown this way
 		<p>My fav color is <strong>{{currentUser.profile.favcolor}}</strong></p>
@@ -66,35 +92,69 @@
 		-->
 		{{#each curuser}}
 			{{> profileData}}
-		{{/each}}
-
-		{{#if editMode}}
-			<button id="saveEdit" class="btn btn-success" type="submit">Save</button>
-		{{else}}
-			<button id="editProfile" class="btn btn-custom" type="submit"><i class="icon-pencil icon-white"></i> Edit Your Profile</button>
-		{{/if}}
-		
+		{{/each}}		
 		<hr>
 		<button id="logout" class="btn" type="submit">Log Out</button>
 	{{/if}}
 </template>
 
 <template name="user_loggedout">
-		{{#if signup}}
-			<input class="span4" id="usernameup" type="text" placeholder="Choose a username">
-			<input class="span4" id="passwordup" type="text" placeholder="Choose a password">
-			<p>Share someting about yourself</p>
-			<input class="span4" id="favcolor" type="text" placeholder="What is you Fav color?">
-			<input class="span4" id="location" type="text" placeholder="Where are you?">
-			</br>
-			<button id="createUser" class="btn btn-success" type="submit">Create User</button>
-		{{else}}
-			<p>Login with your account</p>
-			<input class="span4" id="username" type="text" placeholder="username">
-			<input class="span4" id="password" type="password" placeholder="password">
-			</br>
-			<button id="login" class="btn btn-success" type="submit">Sign In</button>
-			<hr>
-			<p>New user? <a id="signup">Sign up now!</a></p>
-		{{/if}}
+	{{#if signup}}
+		<form id="signupForm" name="signupForm">
+			<div class="control-group">
+				<div class="controls">	
+					<input class="span4" id="usernameSignup" name="usernameSignup" type="text" placeholder="Choose a username">
+					<div class="alert alert-info">Must be alphanumerical at least 3 characters and no longer then 9</div>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input class="span4" id="email" name="email" type="email" placeholder="Your email">
+					<div class="alert alert-info">An email confirmation will be sent</div>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input id="passwordSignup" name="passwordSignup" class="span2" type="password" placeholder="Password">
+					<input id="password_againSignup" name="password_againSignup" class="span2" type="password" placeholder="Retype your password">
+					<div class="alert alert-info">Make sure you type your password correctly</div>
+				</div>
+			</div>
+			<h4 class="text-center"><strong>Share someting about yourself</strong></h4>
+			<div class="control-group">
+				<div class="controls">
+					<!--
+					<input class="span4" id="favcolor" type="text" pattern="[\w\.,;:&-\*\s\t\r\n/\+\|\?\'\#\)\(]{1,20}" data-validation-pattern-message="Must be less than 20 characters" placeholder="What is you Fav color?" required>
+					-->
+					<input name="favcolor" class="span4" id="favcolor" type="text" placeholder="What is your favourite color?">
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<!--
+					<input class="span4" id="location" type="text" pattern="[\w\.,;:&-\*\s\t\r\n/\+\|\?\'\#\)\(]{1,100}" data-validation-pattern-message="Must be less than 100 characters" placeholder="Where are you?" required>
+					-->
+					<input name="location" class="span4" id="location" type="text" placeholder="Where are you?">
+				</div>
+			</div>
+			<button class="btn btn-success" type="submit" id="createUser" data-loading-text="Creating user...">Create Your Account</button>
+		</form>
+	{{else}}
+		<p>Login with your account </p>
+		<form id="loginForm" name="loginForm">
+			<div class="control-group">
+				<div class="controls">
+					<input class="span4" id="usernameLogin" name="usernameLogin" type="text" placeholder="username">
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input class="span4" id="passwordLogin" name="passwordLogin" type="password" placeholder="password">
+				</div>
+			</div>
+			<button id="login" class="btn btn-success" type="submit" data-loading-text="Signing in...">Sign In</button>
+		</form>
+		<hr>
+		<p>New user? <a id="signup">Sign up now!</a></p>
+	{{/if}}
 </template>

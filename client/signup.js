@@ -1,8 +1,28 @@
-// functions that can be reused 
+var LoginErr, createUserError;
+// functions that can be reused
 function login () {
-	var username = $("#username").val();
-	var password = $("#password").val();
-	Meteor.loginWithPassword(username, password);
+	var username = $("#usernameLogin").val();
+	var password = $("#passwordLogin").val();
+	Meteor.loginWithPassword(username, password, function (error){
+		if (error) {
+			if (LoginErr == 1) {
+				//console.log("LoginErr is greater then or equal to 1");
+				//$("#mainDiv p:first span").addClass("label-warning");
+				$("#mainDiv div.alert").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+				LoginErr = LoginErr + 1;
+			} else if (LoginErr >= 2) {
+				//$("#mainDiv p:first span").removeClass("label-warning").addClass("label-important");
+				$("#mainDiv div.alert").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+				LoginErr = LoginErr + 1;
+			}
+			else {
+				$("#mainDiv p:first").remove();
+				$("form#loginForm").before("<div class='alert alert-error'>Wrong username or password!</div>");
+				LoginErr = 1;
+			}
+			$("#login").button('reset');
+		}
+	});
 }
 
 //run function when the dependencies change. 
@@ -15,14 +35,24 @@ Meteor.autorun(function () {
 	}
 });
 
+Meteor.loggingIn();
+// check if the user has logged in previously and the server is waiting for a reply
+if (Meteor.userId() && Meteor.status().status == "connecting"){
+	var once = true;
+	Template.main.rendered = function() {
+		if (once) {
+			once = false;
+			console.log("logged in Waiting for reply");
+			$(function() {
+				$("#loginAlert").modal("show");
+			});
+		};
+	};
+} 
+
 // if the user is logged out
 // All the events that are bound to 'user_loggedout'
 Template.user_loggedout.events({
-	"click #login": function (e, tmpl) {
-		console.log("clicked login");
-		// login() function just to reuse the snippet of code 
-		login();
-	},
 	"keyup #password": function (event) {
 		if (event.type == "keyup" && event.which == 13) {
 			console.log("keyup identified enter was pressed");
@@ -33,24 +63,64 @@ Template.user_loggedout.events({
 		console.log("clicked signup");
 		Session.set("signup", true);
 		console.log(Session.get("signup"));
-	},
-	"click #createUser": function (e, tmpl) {
-		console.log("clicked Create User BTN");
-		// get the values form the input elements 
-		var username = $("#usernameup").val();
-		var password = $("#passwordup").val();
-		var favcolor = $("#favcolor").val();
-		var location = $("#location").val();
-
-		console.log(username + " : " + password + " : " + favcolor + " : " + location);
-
-		Accounts.createUser({username: username, password: password, profile: {favcolor: favcolor, location: location}});
 	}
 });
+// Verify email address
+/*
+Meteor.startup(function () {
+if (Accounts._verifyEmailToken) {
+	console.log("_verifyEmailToken exists");
+	Accounts.verifyEmail(Accounts._verifyEmailToken, function(error) {
+	Accounts._enableAutoLogin();
+	if (!error)
+		//loginButtonsSession.set('justVerifiedEmail', true);
+		console.log("their was no error verifying the email");
+	// XXX show something if there was an error.
+	});
+}
+
+});
+*/
+
+// function for creating user account... Run if the form is valid
+function createUserAccount () {
+	console.log("INIT create user account ");
+	
+	// get the values form the input elements 
+	var username = $("#usernameSignup").val();
+	var password = $("#passwordSignup").val();
+	var favcolor = $("#favcolor").val();
+	var location = $("#location").val();
+	var email = $("#email").val();
+
+	console.log(username + " : " + password + " : " + email + " : " + favcolor + " : " + location);
+
+	Accounts.createUser({username: username, password: password, email: email, profile: {favcolor: favcolor, location: location}}, function(error) {
+		if (error) {
+			console.log(error);
+			//$("#signupForm div .alert").remove();
+			$("#createUser").button('reset');
+			if (createUserError >= 1) {
+				$("#mainDiv div.alert:first").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+			} else {
+				$("form#signupForm").before("<div class='alert alert-error'>" + error.reason + "</div>");
+				createUserError = 1;
+			}
+		}
+	});
+	
+};
 
 Template.user_loggedin.curuser = function () {
 	return Meteor.users.find({_id: Meteor.userId()});
 }
+// hide the login alert HERE because this is where the user_loggedin template is called if logged in
+Template.user_loggedin.created = function () {
+	console.log("hide LoggingIn alert");
+	$(function() {
+		$("#loginAlert").modal("hide");
+	});
+};
 
 // return to handlebars #if helper true or false to reveal or hide the signup form
 Template.user_loggedout.signup = function () {
@@ -105,3 +175,15 @@ Template.user_loggedin.events({
 		Session.set("editMode", false);
 	}
 });
+
+// initiate validate when Template is rendered 
+Template.user_loggedout.rendered = function () {
+	if (Session.get("signup")) {
+		console.log("validate: " + signupForm);
+		myValidation (signupRules, signupMessages, signupForm, signupPlacement, signupHandleSubmit);
+	} else {
+		console.log("validate: " + loginForm);
+		myValidation (loginRules, loginMessages, loginForm, loginPlacement, loginHandleSubmit);
+	}
+}
+
